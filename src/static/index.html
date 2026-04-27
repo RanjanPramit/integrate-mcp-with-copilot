@@ -1,50 +1,194 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Mergington High School Activities</title>
+    <title>Mergington High School - Activities Management</title>
     <link rel="stylesheet" href="styles.css" />
-  </head>
-  <body>
-    <header>
-      <h1>Mergington High School</h1>
-      <h2>Extracurricular Activities</h2>
-    </header>
+</head>
+<body>
+    <!-- Auth Modal -->
+    <div id="auth-modal" class="modal">
+        <div class="modal-content">
+            <!-- Login Form -->
+            <div id="login-form" class="form-section">
+                <h2>Login</h2>
+                <form id="login-form-element">
+                    <div class="form-group">
+                        <label for="login-email">Email:</label>
+                        <input type="email" id="login-email" required placeholder="your-email@mergington.edu" />
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">Password:</label>
+                        <input type="password" id="login-password" required />
+                    </div>
+                    <button type="submit" class="btn btn-primary">Login</button>
+                </form>
+                <div id="login-message" class="message hidden"></div>
+                <p>Don't have an account? <a href="#" onclick="switchForm('register')">Register here</a></p>
+            </div>
 
-    <main>
-      <section id="activities-container">
-        <h3>Available Activities</h3>
-        <div id="activities-list">
-          <!-- Activities will be loaded here -->
-          <p>Loading activities...</p>
+            <!-- Register Form -->
+            <div id="register-form" class="form-section hidden">
+                <h2>Register</h2>
+                <form id="register-form-element">
+                    <div class="form-group">
+                        <label for="register-email">Email:</label>
+                        <input type="email" id="register-email" required placeholder="your-email@mergington.edu" />
+                    </div>
+                    <div class="form-group">
+                        <label for="register-name">Full Name:</label>
+                        <input type="text" id="register-name" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="register-grade">Grade Level:</label>
+                        <select id="register-grade" required>
+                            <option value="">Select your grade</option>
+                            <option value="9">9th Grade</option>
+                            <option value="10">10th Grade</option>
+                            <option value="11">11th Grade</option>
+                            <option value="12">12th Grade</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-password">Password:</label>
+                        <input type="password" id="register-password" required />
+                    </div>
+                    <button type="submit" class="btn btn-primary">Register</button>
+                </form>
+                <div id="register-message" class="message hidden"></div>
+                <p>Already have an account? <a href="#" onclick="switchForm('login')">Login here</a></p>
+            </div>
         </div>
-      </section>
+    </div>
 
-      <section id="signup-container">
-        <h3>Sign Up for an Activity</h3>
-        <form id="signup-form">
-          <div class="form-group">
-            <label for="email">Student Email:</label>
-            <input type="email" id="email" required placeholder="your-email@mergington.edu" />
-          </div>
-          <div class="form-group">
-            <label for="activity">Select Activity:</label>
-            <select id="activity" required>
-              <option value="">-- Select an activity --</option>
-              <!-- Activity options will be loaded here -->
-            </select>
-          </div>
-          <button type="submit">Sign Up</button>
-        </form>
-        <div id="message" class="hidden"></div>
-      </section>
-    </main>
+    <!-- Main App -->
+    <div id="app" class="hidden">
+        <header>
+            <div class="header-content">
+                <div>
+                    <h1>Mergington High School</h1>
+                    <h2>Extracurricular Activities</h2>
+                </div>
+                <div class="user-menu">
+                    <span id="user-name"></span>
+                    <button id="logout-btn" class="btn btn-secondary">Logout</button>
+                </div>
+            </div>
+        </header>
 
-    <footer>
-      <p>&copy; 2026 Mergington High School</p>
-    </footer>
+        <main>
+            <!-- Navigation Tabs -->
+            <nav class="tabs">
+                <button class="tab-btn active" data-tab="activities">Available Activities</button>
+                <button class="tab-btn" data-tab="my-activities">My Activities</button>
+                <button class="tab-btn" data-tab="stats">My Stats</button>
+                <button class="tab-btn admin-only hidden" data-tab="admin">Admin Panel</button>
+            </nav>
+
+            <!-- Activities Tab -->
+            <section id="activities" class="tab-content active">
+                <h3>Available Activities</h3>
+                <div class="filter-group">
+                    <label for="category-filter">Filter by category:</label>
+                    <select id="category-filter">
+                        <option value="">All Categories</option>
+                        <option value="academic">Academic</option>
+                        <option value="sports">Sports</option>
+                        <option value="cultural">Cultural</option>
+                        <option value="technical">Technical</option>
+                    </select>
+                </div>
+                <div id="activities-list" class="activities-grid">
+                    <p>Loading activities...</p>
+                </div>
+            </section>
+
+            <!-- My Activities Tab -->
+            <section id="my-activities" class="tab-content hidden">
+                <h3>My Activities</h3>
+                <div id="my-activities-list" class="activities-grid">
+                    <p>You haven't signed up for any activities yet.</p>
+                </div>
+            </section>
+
+            <!-- Stats Tab -->
+            <section id="stats" class="tab-content hidden">
+                <h3>My Statistics</h3>
+                <div id="stats-content" class="stats-card">
+                    <div class="stat-item">
+                        <span class="stat-label">Activities Signed Up:</span>
+                        <span class="stat-value" id="stat-signups">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Activities Attended:</span>
+                        <span class="stat-value" id="stat-attended">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Attendance Rate:</span>
+                        <span class="stat-value" id="stat-rate">0%</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Admin Panel Tab -->
+            <section id="admin" class="tab-content hidden admin-only">
+                <h3>Admin Panel</h3>
+                <div class="admin-section">
+                    <h4>Create New Activity</h4>
+                    <form id="create-activity-form">
+                        <div class="form-group">
+                            <label for="admin-name">Activity Name:</label>
+                            <input type="text" id="admin-name" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="admin-description">Description:</label>
+                            <textarea id="admin-description" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="admin-category">Category:</label>
+                            <select id="admin-category" required>
+                                <option value="">Select category</option>
+                                <option value="academic">Academic</option>
+                                <option value="sports">Sports</option>
+                                <option value="cultural">Cultural</option>
+                                <option value="technical">Technical</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="admin-schedule">Schedule:</label>
+                            <input type="text" id="admin-schedule" placeholder="e.g., Tuesdays, 3:30 PM - 4:30 PM" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="admin-location">Location:</label>
+                            <input type="text" id="admin-location" />
+                        </div>
+                        <div class="form-group">
+                            <label for="admin-max">Max Participants:</label>
+                            <input type="number" id="admin-max" required min="1" />
+                        </div>
+                        <button type="submit" class="btn btn-primary">Create Activity</button>
+                    </form>
+                    <div id="admin-message" class="message hidden"></div>
+                </div>
+
+                <div class="admin-section">
+                    <h4>Activities Management</h4>
+                    <div id="admin-activities-list"></div>
+                </div>
+
+                <div class="admin-section">
+                    <h4>Merit List</h4>
+                    <div id="merit-list"></div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>&copy; 2026 Mergington High School - Activities Management System</p>
+        </footer>
+    </div>
 
     <script src="app.js"></script>
-  </body>
+</body>
 </html>
